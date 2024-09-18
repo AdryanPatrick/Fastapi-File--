@@ -74,3 +74,18 @@ class FileProcessor:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail="Arquivo inexistente, por favor acessar"
                                        " a rota de criar a arquivo.")
+    async def list_files(self):
+        """
+        Lista os dados do arquivo CSV criado
+        :return: lista de dados ou mensagem de erro
+        """
+        if os.path.exists(self.file_path):
+            with open(self.file_path, mode='r') as file:
+                csv_reader = csv.reader(file)
+                # Skip the header row (optional)
+                next(csv_reader, None)
+                data = [row for row in csv_reader]
+                return data
+        else:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                detail="Arquivo inexistente.")                               
